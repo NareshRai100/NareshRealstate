@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naresh Rai — Your Local Realtor</title>
+<meta name="description" content="Find your dream home with Naresh Rai, your trusted local realtor. Search listings by zip code.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #faf8f5; --white: #ffffff; --navy: #142132; --slate: #3d5166;
+    --muted: #8a9aaa; --border: #e5ded6; --gold: #b8924a; --gold-lt: #e8d5b0;
+    --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Jost', sans-serif;
+    --radius: 12px; --shadow: 0 4px 24px rgba(20,33,50,0.08); --shadow-lg: 0 12px 48px rgba(20,33,50,0.14);
+    --red: #e05555;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--navy); line-height: 1.6; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  input, textarea, select, button { font-family: var(--sans); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 68px;
+    background: rgba(250,248,245,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(20,33,50,0.08); }
+  .nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 700; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 36px; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
+  .nav-links a { color: var(--slate); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-cta { background: var(--navy); color: var(--white); padding: 10px 22px; border-radius: 6px; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; transition: background 0.2s; }
+  .nav-cta:hover { background: var(--gold); }
+  .admin-link { font-size: 12px; color: var(--muted); cursor: pointer; letter-spacing: 0.5px; padding: 6px 10px; border-radius: 6px; transition: 0.2s; }
+  .admin-link:hover { color: var(--gold); background: rgba(184,146,74,0.08); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--navy); border-radius: 2px; }
+  .mobile-menu { display: none; position: fixed; top: 68px; left: 0; right: 0; z-index: 99; background: var(--white); border-bottom: 1px solid var(--border); flex-direction: column; padding: 20px 28px 28px; gap: 20px; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--slate); letter-spacing: 1px; text-transform: uppercase; font-size: 13px; }
+
+  /* HERO */
+  #home { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 24px 80px; text-align: center; position: relative; background: linear-gradient(170deg, rgba(250,248,245,0.9) 45%, rgba(184,146,74,0.12) 100%), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80') center/cover no-repeat; }
+  .hero-inner { max-width: 680px; }
+  .hero-badge { display: inline-block; margin-bottom: 24px; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 500; border: 1px solid var(--gold-lt); padding: 6px 18px; border-radius: 99px; background: rgba(255,255,255,0.7); }
+  .hero-inner h1 { font-family: var(--serif); font-size: clamp(42px, 7vw, 76px); line-height: 1.1; font-weight: 700; margin-bottom: 20px; }
+  .hero-inner h1 em { color: var(--gold); font-style: italic; }
+  .hero-inner p { font-size: 17px; color: var(--slate); font-weight: 300; margin-bottom: 48px; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .search-bar { display: flex; max-width: 460px; margin: 0 auto; background: var(--white); border-radius: 10px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1.5px solid var(--border); }
+  .search-bar input { flex: 1; border: none; outline: none; padding: 18px 22px; font-size: 16px; color: var(--navy); background: transparent; letter-spacing: 1px; }
+  .search-bar input::placeholder { color: var(--muted); letter-spacing: 0; font-size: 15px; }
+  .search-bar button { background: var(--gold); border: none; cursor: pointer; padding: 0 28px; color: var(--white); font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: background 0.2s; white-space: nowrap; }
+  .search-bar button:hover { background: var(--navy); }
+
+  /* SHARED */
+  section { padding: 96px 24px; }
+  .section-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 12px; }
+  .section-title { font-family: var(--serif); font-size: clamp(32px, 4vw, 52px); line-height: 1.2; font-weight: 700; }
+  .section-title em { color: var(--gold); font-style: italic; }
+  .section-sub { color: var(--slate); font-size: 16px; font-weight: 300; margin-top: 12px; max-width: 520px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* LISTINGS */
+  #listings { background: var(--white); }
+  .listings-top { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 40px; }
+  .listings-filter { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .listings-filter label { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .filter-input { border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 14px; color: var(--navy); outline: none; transition: border-color 0.2s; width: 160px; }
+  .filter-input:focus { border-color: var(--gold); }
+  .filter-btn { background: var(--navy); color: var(--white); border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-size: 13px; font-weight: 500; transition: background 0.2s; }
+  .filter-btn:hover { background: var(--gold); }
+  .clear-btn { background: transparent; border: 1.5px solid var(--border); color: var(--muted); border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 13px; transition: 0.2s; }
+  .clear-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
+  .listing-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); transition: transform 0.25s, box-shadow 0.25s; background: var(--white); }
+  .listing-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+  .card-img { height: 210px; overflow: hidden; position: relative; background: #f0ece3; }
+  .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .card-img .no-img { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  .listing-card:hover .card-img img { transform: scale(1.05); }
+  .card-badge { position: absolute; top: 14px; left: 14px; background: var(--gold); color: var(--white); font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; }
+  .card-badge.sold { background: var(--slate); }
+  .card-body { padding: 22px; }
+  .card-price { font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+  .card-address { font-size: 14px; color: var(--navy); font-weight: 500; margin-bottom: 4px; }
+  .card-zip { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .card-specs { display: flex; gap: 16px; font-size: 13px; color: var(--slate); padding-top: 14px; border-top: 1px solid var(--border); }
+  .no-results { text-align: center; padding: 60px 0; color: var(--muted); font-size: 16px; grid-column: 1/-1; }
+  .no-results strong { display: block; font-family: var(--serif); font-size: 28px; color: var(--navy); margin-bottom: 8px; }
+
+  /* ABOUT */
+  #about { background: var(--bg); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .about-img-wrap { position: relative; }
+  .about-img { border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/5; box-shadow: var(--shadow-lg); }
+  .about-img img { width: 100%; height: 100%; object-fit: cover; }
+  .about-accent { position: absolute; bottom: -20px; right: -20px; background: var(--gold); color: var(--white); border-radius: var(--radius); padding: 20px 24px; text-align: center; box-shadow: var(--shadow); }
+  .about-accent-num { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1; }
+  .about-accent-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.85; margin-top: 4px; }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .about-stat { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+  .about-stat-num { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--gold); }
+  .about-stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .about-btn { display: inline-block; margin-top: 32px; background: var(--navy); color: var(--white); padding: 14px 32px; border-radius: 8px; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+  .about-btn:hover { background: var(--gold); }
+
+  /* CONTACT */
+  #contact { background: var(--navy); color: var(--white); }
+  #contact .section-label { color: var(--gold-lt); }
+  #contact .section-title { color: var(--white); }
+  #contact .section-sub { color: #8fa4bc; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 52px; }
+  .contact-info { display: flex; flex-direction: column; gap: 28px; }
+  .contact-item { display: flex; align-items: flex-start; gap: 16px; }
+  .contact-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .contact-item-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-lt); margin-bottom: 4px; }
+  .contact-item-val { font-size: 16px; color: var(--white); }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #8fa4bc; font-weight: 500; }
+  .form-group input, .form-group textarea, .form-group select { background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 13px 16px; color: var(--white); font-size: 15px; outline: none; transition: border-color 0.2s; }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group select { color: rgba(255,255,255,0.7); -webkit-appearance: none; }
+  .form-group select option { background: var(--navy); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .submit-btn { background: var(--gold); color: var(--white); border: none; border-radius: 8px; padding: 15px 32px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; width: 100%; }
+  .submit-btn:hover { background: #d4a85a; }
+  .form-success { display: none; text-align: center; padding: 32px 0; color: #a8d8b0; font-size: 17px; }
+  .form-success strong { display: block; font-family: var(--serif); font-size: 28px; margin-bottom: 8px; color: var(--white); }
+
+  /* FOOTER */
+  footer { background: #0a1520; color: rgba(255,255,255,0.4); text-align: center; padding: 28px 24px; font-size: 13px; }
+  footer strong { color: rgba(255,255,255,0.7); }
+
+  /* ═══════ ADMIN PANEL ═══════ */
+  .admin-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(10,21,32,0.85); backdrop-filter: blur(6px); align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; }
+  .admin-overlay.open { display: flex; }
+  .admin-panel { background: var(--white); border-radius: 20px; width: 100%; max-width: 820px; box-shadow: 0 32px 80px rgba(10,21,32,0.4); overflow: hidden; margin: auto; }
+  .admin-header { background: var(--navy); padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .admin-header h2 { font-family: var(--serif); font-size: 24px; color: var(--white); }
+  .admin-header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .admin-close { background: rgba(255,255,255,0.1); border: none; color: var(--white); width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .admin-close:hover { background: rgba(255,255,255,0.2); }
+  .admin-tabs { display: flex; border-bottom: 1px solid var(--border); background: #f7f4ee; }
+  .admin-tab { padding: 14px 28px; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 0.5px; color: var(--muted); border-bottom: 3px solid transparent; transition: 0.2s; }
+  .admin-tab.active { color: var(--navy); border-bottom-color: var(--gold); background: var(--white); }
+  .admin-tab-content { display: none; padding: 28px 32px; }
+  .admin-tab-content.active { display: block; }
+  .login-box { max-width: 360px; margin: 20px auto; }
+  .login-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 6px; }
+  .login-box p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .a-input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 15px; color: var(--navy); outline: none; transition: border-color 0.2s; margin-bottom: 12px; }
+  .a-input:focus { border-color: var(--gold); }
+  .a-btn { width: 100%; background: var(--navy); color: var(--white); border: none; border-radius: 8px; padding: 13px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .a-btn:hover { background: var(--gold); }
+  .login-error { color: var(--red); font-size: 13px; margin-top: 8px; display: none; }
+  .login-hint { font-size: 12px; color: var(--muted); margin-top: 16px; text-align: center; line-height: 1.6; }
+  .add-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .add-form .full { grid-column: 1/-1; }
+  .a-label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+  .a-select { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 14px; color: var(--navy); outline: none; background: var(--white); -webkit-appearance: none; transition: border-color 0.2s; }
+  .a-select:focus { border-color: var(--gold); }
+  .add-submit { background: var(--gold); color: var(--white); border: none; border-radius: 8px; padding: 13px 28px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .add-submit:hover { background: #d4a85a; }
+  .img-preview { width: 100%; height: 140px; border-radius: 8px; object-fit: cover; display: none; margin-top: 8px; border: 1px solid var(--border); }
+  .manage-list { display: flex; flex-direction: column; gap: 12px; }
+  .manage-item { display: flex; align-items: center; gap: 16px; border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; background: var(--bg); }
+  .manage-thumb { width: 60px; height: 50px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+  .manage-thumb-ph { width: 60px; height: 50px; border-radius: 6px; background: #f0ece3; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .manage-info { flex: 1; min-width: 0; }
+  .manage-address { font-size: 14px; font-weight: 500; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .manage-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .manage-price { font-family: var(--serif); font-size: 16px; color: var(--gold); font-weight: 600; white-space: nowrap; }
+  .manage-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .edit-btn { background: var(--navy); color: var(--white); border: none; border-radius: 6px; padding: 7px 14px; font-size: 12px; cursor: pointer; transition: background 0.2s; }
+  .edit-btn:hover { background: var(--gold); }
+  .del-btn { background: transparent; border: 1.5px solid #f0d0d0; color: var(--red); border-radius: 6px; padding: 7px 14px; font-size: 12px; cursor: pointer; transition: 0.2s; }
+  .del-btn:hover { background: var(--red); color: var(--white); border-color: var(--red); }
+  .manage-empty { text-align: center; padding: 48px 0; color: var(--muted); font-size: 15px; }
+  .logout-btn { background: transparent; border: 1.5px solid var(--border); color: var(--muted); border-radius: 8px; padding: 8px 18px; font-size: 13px; cursor: pointer; margin-top: 24px; transition: 0.2s; }
+  .logout-btn:hover { border-color: var(--red); color: var(--red); }
+  .pwd-box { max-width: 400px; }
+  .pwd-msg { font-size: 13px; margin-top: 8px; display: none; }
+
+  /* EDIT MODAL */
+  .edit-modal { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(10,21,32,0.8); align-items: center; justify-content: center; padding: 24px; }
+  .edit-modal.open { display: flex; }
+  .edit-modal-inner { background: var(--white); border-radius: 16px; width: 100%; max-width: 640px; padding: 32px; box-shadow: 0 24px 60px rgba(10,21,32,0.4); max-height: 90vh; overflow-y: auto; }
+  .edit-modal-inner h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 24px; }
+  .edit-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .edit-form .full { grid-column: 1/-1; }
+  .edit-actions { display: flex; gap: 12px; margin-top: 4px; grid-column: 1/-1; }
+  .save-btn { background: var(--gold); color: var(--white); border: none; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .save-btn:hover { background: #d4a85a; }
+  .cancel-btn { background: transparent; border: 1.5px solid var(--border); color: var(--muted); border-radius: 8px; padding: 12px 24px; font-size: 14px; cursor: pointer; transition: 0.2s; }
+  .cancel-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links, .nav-cta, .admin-link { display: none; }
+    .hamburger { display: flex; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-img { aspect-ratio: 16/9; }
+    .add-form, .edit-form { grid-template-columns: 1fr; }
+    .add-form .full, .edit-form .full { grid-column: 1; }
+    .form-row { grid-template-columns: 1fr; }
+    .admin-tab { padding: 12px 16px; font-size: 12px; }
+  }
+  @media (max-width: 540px) {
+    section { padding: 72px 20px; }
+    .admin-tab-content { padding: 20px; }
+    .admin-header { padding: 20px; }
+    .manage-item { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">Naresh<span>.</span>Rai</div>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#listings">Listings</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <span class="admin-link" onclick="openAdmin()">⚙ Admin</span>
+    <a href="#contact" class="nav-cta">Get In Touch</a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="toggleMenu()">Home</a>
+  <a href="#listings" onclick="toggleMenu()">Listings</a>
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a onclick="toggleMenu();openAdmin();" style="cursor:pointer;color:var(--gold)">⚙ Admin Panel</a>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-inner">
+    <div class="hero-badge">Trusted Local Realtor</div>
+    <h1>Find Your <em>Perfect</em><br>Home Today</h1>
+    <p>Search active listings in your neighborhood. Real expertise, real results — right in your zip code.</p>
+    <div class="search-bar">
+      <input type="text" id="heroZip" placeholder="Enter zip code (e.g. 17112)" maxlength="10"
+        oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')heroSearch()">
+      <button onclick="heroSearch()">Search</button>
+    </div>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section id="listings">
+  <div class="container">
+    <div class="listings-top reveal">
+      <div>
+        <div class="section-label">Properties</div>
+        <h2 class="section-title">Active <em>Listings</em></h2>
+        <p class="section-sub">Browse available homes. Filter by zip code to find what's near you.</p>
+      </div>
+      <div class="listings-filter">
+        <label for="zipFilter">Zip Code</label>
+        <input class="filter-input" id="zipFilter" type="text" placeholder="e.g. 17112" maxlength="10"
+          oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')filterListings()">
+        <button class="filter-btn" onclick="filterListings()">Filter</button>
+        <button class="clear-btn" onclick="clearFilter()">Clear</button>
+      </div>
+    </div>
+    <div class="listings-grid reveal" id="listingsGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal">
+        <div class="about-img">
+          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80" alt="Naresh Rai, Realtor" id="aboutPhoto">
+        </div>
+        <div class="about-accent">
+          <div class="about-accent-num">12+</div>
+          <div class="about-accent-label">Years of Experience</div>
+        </div>
+      </div>
+      <div class="about-content reveal">
+        <div class="section-label">About Me</div>
+        <h2 class="section-title">Your Trusted<br><em>Local Expert</em></h2>
+        <p class="section-sub" style="margin-top:16px">Hi, I'm Naresh Rai — a licensed realtor with over a decade of experience helping families find the right home in the right neighborhood at the right price.</p>
+        <p class="section-sub" style="margin-top:12px">I specialize in residential sales throughout the Harrisburg, PA area — including zip codes 17112, 17109, 17110, and 17111. Whether you're buying your first home or upgrading to your forever home, I'm here to guide you every step of the way.</p>
+        <div class="about-stats">
+          <div class="about-stat"><div class="about-stat-num">250+</div><div class="about-stat-label">Homes Sold</div></div>
+          <div class="about-stat"><div class="about-stat-num">98%</div><div class="about-stat-label">Client Satisfaction</div></div>
+          <div class="about-stat"><div class="about-stat-num">$80M+</div><div class="about-stat-label">Total Sales</div></div>
+          <div class="about-stat"><div class="about-stat-num">12yr</div><div class="about-stat-label">Experience</div></div>
+        </div>
+        <a href="#contact" class="about-btn">Let's Talk →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Let's Find Your<br><em>Dream Home</em></h2>
+    <p class="section-sub">Have a question about a listing or ready to get started? Send me a message and I'll get back to you within 24 hours.</p>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="contact-item"><div class="contact-icon">📍</div><div><div class="contact-item-label">Office</div><div class="contact-item-val">4785 Linglestown Rd <br>Harrisburg, PA 17112</div></div></div>
+        <div class="contact-item"><div class="contact-icon">📞</div><div><div class="contact-item-label">Cell</div><div class="contact-item-val"><a href="tel:+14045730819">(404) 573-0819</a></div></div></div>
+        <div class="contact-item"><div class="contact-icon">📞</div><div><div class="contact-item-label">Phone</div><div class="contact-item-val"><a href="tel:+14045730819">(717) 745-2929</a></div></div></div>
+        <div class="contact-item"><div class="contact-icon">✉️</div><div><div class="contact-item-label">Email</div><div class="contact-item-val"><a href="mailto:narr714@gmail.com">narr714@gmail.com</a></div></div></div>
+        <div class="contact-item"><div class="contact-icon">🕐</div><div><div class="contact-item-label">Hours</div><div class="contact-item-val">Mon–Sat: 8am – 7pm<br>Sun: By Appointment</div></div></div>
+      </div>
+      <!--
+        TO ENABLE REAL EMAIL: Sign up at formspree.io (free)
+        Replace action="#" with your Formspree URL, e.g.: action="https://formspree.io/f/xabcdefg"
+      -->
+      <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/mqednkdq" method="POST" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" name="first_name" placeholder="Jane" required></div>
+          <div class="form-group"><label>Last Name</label><input type="text" name="last_name" placeholder="Doe" required></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="jane@example.com" required></div>
+        <div class="form-group"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="(555) 000-0000"></div>
+        <div class="form-group">
+          <label>I'm interested in…</label>
+          <select name="interest">
+            <option value="">Select one</option>
+            <option>Buying a home</option><option>Selling my home</option>
+            <option>A specific listing</option><option>General inquiry</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message</label><textarea name="message" placeholder="Tell me a bit about what you're looking for…"></textarea></div>
+        <button type="submit" class="submit-btn">Send Message →</button>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <strong>Message Sent! 🎉</strong>
+        Thank you for reaching out. John will get back to you within 24 hours.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Naresh Rai</strong> · Licensed Realtor · DRE# 000000000 · © <span id="year"></span>
+</footer>
+
+<!-- ADMIN OVERLAY -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <div><h2>Admin Panel</h2><p>Manage your property listings</p></div>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-tabs" id="adminTabs">
+      <div class="admin-tab active" onclick="switchTab('login')" id="tab-login">🔐 Login</div>
+    </div>
+    <!-- LOGIN -->
+    <div class="admin-tab-content active" id="content-login">
+      <div class="login-box">
+        <h3>Welcome back, Naresh</h3>
+        <p>Enter your admin password to manage listings.</p>
+        <input class="a-input" type="password" id="loginPwd" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="a-btn" onclick="doLogin()">Log In</button>
+        <div class="login-error" id="loginError">❌ Incorrect password. Try again.</div>
+        <p class="login-hint">Default password: <strong>admin123</strong><br>Change it after your first login.</p>
+      </div>
+    </div>
+    <!-- ADD -->
+    <div class="admin-tab-content" id="content-add">
+      <h3 style="font-family:var(--serif);font-size:20px;margin-bottom:20px">Add New Listing</h3>
+      <div class="add-form">
+        <div><label class="a-label">Status</label><select class="a-select" id="f-status"><option value="For Sale">For Sale</option><option value="Sold">Sold</option></select></div>
+        <div><label class="a-label">Price (e.g. $549,000)</label><input class="a-input" id="f-price" type="text" placeholder="$549,000" style="margin:0"></div>
+        <div class="full"><label class="a-label">Street Address</label><input class="a-input" id="f-address" type="text" placeholder="123 Oak Avenue" style="margin:0"></div>
+        <div><label class="a-label">Zip Code</label><input class="a-input" id="f-zip" type="text" placeholder="90210" maxlength="10" style="margin:0" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+        <div><label class="a-label">Bedrooms</label><input class="a-input" id="f-beds" type="number" placeholder="3" min="0" style="margin:0"></div>
+        <div><label class="a-label">Bathrooms</label><input class="a-input" id="f-baths" type="number" placeholder="2" min="0" step="0.5" style="margin:0"></div>
+        <div><label class="a-label">Sq. Footage</label><input class="a-input" id="f-sqft" type="text" placeholder="1,800 sqft" style="margin:0"></div>
+        <div class="full">
+          <label class="a-label">Photo URL (paste an image link, or leave blank)</label>
+          <input class="a-input" id="f-img" type="url" placeholder="https://..." style="margin:0" oninput="previewImg(this)">
+          <img id="imgPreview" class="img-preview" alt="Preview">
+        </div>
+        <div class="full" style="display:flex;gap:14px;align-items:center">
+          <button class="add-submit" onclick="addListing()">➕ Add Listing</button>
+          <span id="addMsg" style="font-size:13px;color:var(--gold);display:none">✔ Listing added!</span>
+        </div>
+      </div>
+    </div>
+    <!-- MANAGE -->
+    <div class="admin-tab-content" id="content-manage">
+      <h3 style="font-family:var(--serif);font-size:20px;margin-bottom:20px">Manage Listings</h3>
+      <div class="manage-list" id="manageList"></div>
+      <br><button class="logout-btn" onclick="doLogout()">Log Out</button>
+    </div>
+    <!-- PASSWORD -->
+    <div class="admin-tab-content" id="content-pwd">
+      <div class="pwd-box">
+        <h3 style="font-family:var(--serif);font-size:20px;margin-bottom:6px">Change Password</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Keep your admin panel secure.</p>
+        <label class="a-label">Current Password</label>
+        <input class="a-input" type="password" id="pwd-current" placeholder="Current password">
+        <label class="a-label">New Password</label>
+        <input class="a-input" type="password" id="pwd-new" placeholder="New password (min 6 chars)">
+        <label class="a-label">Confirm New Password</label>
+        <input class="a-input" type="password" id="pwd-confirm" placeholder="Repeat new password">
+        <button class="a-btn" onclick="changePassword()">Update Password</button>
+        <div class="pwd-msg" id="pwdMsg"></div>
+      </div>
+    </div>
+    <!-- PROFILE PHOTO -->
+    <div class="admin-tab-content" id="content-photo">
+      <h3 style="font-family:var(--serif);font-size:20px;margin-bottom:6px">Profile Photo</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:24px">Upload a photo or paste a URL — it will appear in the About section.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+        <div>
+          <label class="a-label">Upload Photo From Your Device</label>
+          <input type="file" id="photoFile" accept="image/*" onchange="handlePhotoUpload(this)"
+            style="border:1.5px dashed var(--border);border-radius:8px;padding:12px;width:100%;font-size:13px;color:var(--muted);cursor:pointer;background:var(--bg)">
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">JPG, PNG, WebP supported.</p>
+          <div style="margin-top:20px">
+            <label class="a-label">Or Paste a Photo URL</label>
+            <input class="a-input" type="url" id="photoUrl" placeholder="https://..." oninput="previewProfileImg(this.value)" style="margin-bottom:10px">
+            <button class="add-submit" onclick="saveProfileUrl()">Use This URL</button>
+          </div>
+        </div>
+        <div>
+          <label class="a-label">Preview</label>
+          <div style="width:100%;aspect-ratio:3/4;border-radius:12px;overflow:hidden;border:1.5px solid var(--border);background:#f0ece3;display:flex;align-items:center;justify-content:center">
+            <img id="profilePreview" src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;display:none">
+            <span id="profilePreviewPlaceholder" style="font-size:40px">👤</span>
+          </div>
+          <p id="photoSavedMsg" style="font-size:13px;color:var(--gold);margin-top:10px;display:none">✔ Photo updated on the site!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="edit-modal" id="editModal">
+  <div class="edit-modal-inner">
+    <h3>Edit Listing</h3>
+    <div class="edit-form">
+      <input type="hidden" id="e-id">
+      <div><label class="a-label">Status</label><select class="a-select" id="e-status"><option value="For Sale">For Sale</option><option value="Sold">Sold</option></select></div>
+      <div><label class="a-label">Price</label><input class="a-input" id="e-price" type="text" style="margin:0"></div>
+      <div class="full"><label class="a-label">Street Address</label><input class="a-input" id="e-address" type="text" style="margin:0"></div>
+      <div><label class="a-label">Zip Code</label><input class="a-input" id="e-zip" type="text" maxlength="10" style="margin:0"></div>
+      <div><label class="a-label">Bedrooms</label><input class="a-input" id="e-beds" type="number" min="0" style="margin:0"></div>
+      <div><label class="a-label">Bathrooms</label><input class="a-input" id="e-baths" type="number" min="0" step="0.5" style="margin:0"></div>
+      <div><label class="a-label">Sq. Footage</label><input class="a-input" id="e-sqft" type="text" style="margin:0"></div>
+      <div class="full">
+        <label class="a-label">Photo URL</label>
+        <input class="a-input" id="e-img" type="url" style="margin:0" oninput="previewEditImg(this)">
+        <img id="editImgPreview" class="img-preview" alt="Preview">
+      </div>
+      <div class="edit-actions">
+        <button class="save-btn" onclick="saveListing()">Save Changes</button>
+        <button class="cancel-btn" onclick="closeEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ═══ DATA (localStorage) ═══ */
+const STORAGE_KEY = 'realtor_listings';
+const STORAGE_VER = 'realtor_listings_v2';
+const PWD_KEY = 'realtor_admin_pwd';
+const DEFAULT_PWD = 'admin123';
+const DEFAULT_LISTINGS = [
+  {id:1,status:"For Sale",price:"$319,900",address:"4521 Devonshire Road",zip:"17112",beds:4,baths:2,sqft:"1,980 sqft",img:"https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80"},
+  {id:2,status:"For Sale",price:"$274,500",address:"312 Linglestown Road",zip:"17112",beds:3,baths:2,sqft:"1,560 sqft",img:"https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80"},
+  {id:3,status:"For Sale",price:"$389,000",address:"78 Colonial Park Drive",zip:"17109",beds:4,baths:3,sqft:"2,240 sqft",img:"https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80"},
+  {id:4,status:"Sold",price:"$248,000",address:"1105 Jonestown Road",zip:"17109",beds:3,baths:1,sqft:"1,320 sqft",img:"https://images.unsplash.com/photo-1598228723793-52759bba239c?w=600&q=80"},
+  {id:5,status:"For Sale",price:"$215,000",address:"633 Paxton Street Unit 4",zip:"17111",beds:2,baths:2,sqft:"1,050 sqft",img:"https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&q=80"},
+  {id:6,status:"For Sale",price:"$459,900",address:"29 Clearview Drive",zip:"17110",beds:5,baths:3,sqft:"3,100 sqft",img:"https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&q=80"},
+];
+
+function getListings(){
+  if(!localStorage.getItem(STORAGE_VER)){
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.setItem(STORAGE_VER,'1');
+  }
+  const r=localStorage.getItem(STORAGE_KEY);
+  if(!r){localStorage.setItem(STORAGE_KEY,JSON.stringify(DEFAULT_LISTINGS));return DEFAULT_LISTINGS;}
+  return JSON.parse(r);
+}
+function saveListings(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}
+function getPassword(){return localStorage.getItem(PWD_KEY)||DEFAULT_PWD;}
+
+/* ═══ PUBLIC RENDER ═══ */
+function renderListings(data){
+  const grid=document.getElementById('listingsGrid');
+  if(!data.length){grid.innerHTML='<div class="no-results"><strong>No listings found</strong>Try a different zip code or clear the filter.</div>';return;}
+  grid.innerHTML=data.map(l=>`
+    <div class="listing-card">
+      <div class="card-img">
+        ${l.img?`<img src="${l.img}" alt="${l.address}" loading="lazy">`:'<div class="no-img">🏠</div>'}
+        <span class="card-badge${l.status==='Sold'?' sold':''}">${l.status}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-price">${l.price}</div>
+        <div class="card-address">${l.address}</div>
+        <div class="card-zip">📍 ${l.zip}</div>
+        <div class="card-specs">
+          <span>🛏 ${l.beds} Beds</span><span>🚿 ${l.baths} Baths</span><span>📐 ${l.sqft}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function filterListings(){const z=document.getElementById('zipFilter').value.trim();renderListings(z?getListings().filter(l=>l.zip.includes(z)):getListings());if(z)document.getElementById('listings').scrollIntoView({behavior:'smooth'});}
+function clearFilter(){document.getElementById('zipFilter').value='';renderListings(getListings());}
+function heroSearch(){const z=document.getElementById('heroZip').value.trim();document.getElementById('zipFilter').value=z;filterListings();}
+
+/* ═══ ADMIN AUTH ═══ */
+let isLoggedIn=false;
+function openAdmin(){document.getElementById('adminOverlay').classList.add('open');}
+function closeAdmin(){document.getElementById('adminOverlay').classList.remove('open');}
+function doLogin(){
+  if(document.getElementById('loginPwd').value===getPassword()){
+    isLoggedIn=true;document.getElementById('loginPwd').value='';
+    document.getElementById('loginError').style.display='none';
+    document.getElementById('adminTabs').innerHTML=`
+      <div class="admin-tab" onclick="switchTab('add')" id="tab-add">➕ Add Listing</div>
+      <div class="admin-tab" onclick="switchTab('manage')" id="tab-manage">📋 Manage</div>
+      <div class="admin-tab" onclick="switchTab('photo')" id="tab-photo">🖼 My Photo</div>
+      <div class="admin-tab" onclick="switchTab('pwd')" id="tab-pwd">🔑 Password</div>`;
+    switchTab('add');
+  } else {document.getElementById('loginError').style.display='block';}
+}
+function doLogout(){
+  isLoggedIn=false;
+  document.getElementById('adminTabs').innerHTML=`<div class="admin-tab active" onclick="switchTab('login')" id="tab-login">🔐 Login</div>`;
+  switchTab('login');
+}
+
+/* ═══ TABS ═══ */
+function switchTab(name){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));
+  const t=document.getElementById('tab-'+name);if(t)t.classList.add('active');
+  document.getElementById('content-'+name).classList.add('active');
+  if(name==='manage')renderManageList();
+}
+
+/* ═══ ADD LISTING ═══ */
+function previewImg(input){const p=document.getElementById('imgPreview');if(input.value){p.src=input.value;p.style.display='block';}else p.style.display='none';}
+function addListing(){
+  const price=document.getElementById('f-price').value.trim();
+  const address=document.getElementById('f-address').value.trim();
+  const zip=document.getElementById('f-zip').value.trim();
+  if(!price||!address||!zip){alert('Please fill in price, address, and zip code.');return;}
+  const all=getListings();
+  const newId=all.length?Math.max(...all.map(l=>l.id))+1:1;
+  all.unshift({id:newId,status:document.getElementById('f-status').value,price,address,zip,
+    beds:Number(document.getElementById('f-beds').value)||0,
+    baths:Number(document.getElementById('f-baths').value)||0,
+    sqft:document.getElementById('f-sqft').value.trim()||'—',
+    img:document.getElementById('f-img').value.trim()});
+  saveListings(all);renderListings(all);
+  ['f-price','f-address','f-zip','f-beds','f-baths','f-sqft','f-img'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('imgPreview').style.display='none';
+  const m=document.getElementById('addMsg');m.style.display='inline';setTimeout(()=>m.style.display='none',2500);
+}
+
+/* ═══ MANAGE ═══ */
+function renderManageList(){
+  const all=getListings();const el=document.getElementById('manageList');
+  if(!all.length){el.innerHTML='<div class="manage-empty">No listings yet. Add one from the Add tab!</div>';return;}
+  el.innerHTML=all.map(l=>`
+    <div class="manage-item">
+      ${l.img?`<img class="manage-thumb" src="${l.img}" alt="" onerror="this.style.display='none'">`:'<div class="manage-thumb-ph">🏠</div>'}
+      <div class="manage-info">
+        <div class="manage-address">${l.address}</div>
+        <div class="manage-meta">${l.zip} · ${l.beds}bd/${l.baths}ba · <span style="color:${l.status==='Sold'?'var(--slate)':'var(--gold)'}">${l.status}</span></div>
+      </div>
+      <div class="manage-price">${l.price}</div>
+      <div class="manage-actions">
+        <button class="edit-btn" onclick="openEdit(${l.id})">Edit</button>
+        <button class="del-btn" onclick="deleteListing(${l.id})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+function deleteListing(id){
+  if(!confirm('Delete this listing? This cannot be undone.'))return;
+  const updated=getListings().filter(l=>l.id!==id);saveListings(updated);renderListings(updated);renderManageList();
+}
+
+/* ═══ EDIT ═══ */
+function openEdit(id){
+  const l=getListings().find(x=>x.id===id);if(!l)return;
+  document.getElementById('e-id').value=l.id;
+  document.getElementById('e-status').value=l.status;
+  document.getElementById('e-price').value=l.price;
+  document.getElementById('e-address').value=l.address;
+  document.getElementById('e-zip').value=l.zip;
+  document.getElementById('e-beds').value=l.beds;
+  document.getElementById('e-baths').value=l.baths;
+  document.getElementById('e-sqft').value=l.sqft;
+  document.getElementById('e-img').value=l.img||'';
+  const p=document.getElementById('editImgPreview');
+  if(l.img){p.src=l.img;p.style.display='block';}else p.style.display='none';
+  document.getElementById('editModal').classList.add('open');
+}
+function previewEditImg(input){const p=document.getElementById('editImgPreview');if(input.value){p.src=input.value;p.style.display='block';}else p.style.display='none';}
+function closeEdit(){document.getElementById('editModal').classList.remove('open');}
+function saveListing(){
+  const id=Number(document.getElementById('e-id').value);
+  const updated=getListings().map(l=>l.id!==id?l:{...l,
+    status:document.getElementById('e-status').value,
+    price:document.getElementById('e-price').value.trim(),
+    address:document.getElementById('e-address').value.trim(),
+    zip:document.getElementById('e-zip').value.trim(),
+    beds:Number(document.getElementById('e-beds').value)||0,
+    baths:Number(document.getElementById('e-baths').value)||0,
+    sqft:document.getElementById('e-sqft').value.trim()||'—',
+    img:document.getElementById('e-img').value.trim()});
+  saveListings(updated);renderListings(updated);renderManageList();closeEdit();
+}
+
+/* ═══ PASSWORD ═══ */
+function changePassword(){
+  const cur=document.getElementById('pwd-current').value;
+  const nw=document.getElementById('pwd-new').value;
+  const cf=document.getElementById('pwd-confirm').value;
+  const msg=document.getElementById('pwdMsg');
+  if(cur!==getPassword()){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='❌ Current password is wrong.';return;}
+  if(nw.length<6){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='❌ Password must be at least 6 characters.';return;}
+  if(nw!==cf){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='❌ Passwords do not match.';return;}
+  localStorage.setItem(PWD_KEY,nw);
+  ['pwd-current','pwd-new','pwd-confirm'].forEach(id=>document.getElementById(id).value='');
+  msg.style.display='block';msg.style.color='var(--gold)';msg.textContent='✔ Password updated!';
+  setTimeout(()=>msg.style.display='none',3000);
+}
+
+/* ═══ CONTACT FORM ═══ */
+function handleSubmit(e){
+  const form=document.getElementById('contactForm');
+  if(form.action&&!form.action.endsWith('#')&&form.action!==window.location.href)return true;
+  e.preventDefault();form.style.display='none';document.getElementById('formSuccess').style.display='block';
+}
+
+/* ═══ UI MISC ═══ */
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>40));
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+document.getElementById('zipFilter').addEventListener('keydown',e=>{if(e.key==='Enter')filterListings();});
+document.getElementById('adminOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('adminOverlay'))closeAdmin();});
+document.getElementById('editModal').addEventListener('click',e=>{if(e.target===document.getElementById('editModal'))closeEdit();});
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.getElementById('year').textContent=new Date().getFullYear();
+
+/* ═══ PROFILE PHOTO ═══ */
+const PHOTO_KEY='realtor_profile_photo';
+function loadProfilePhoto(){const s=localStorage.getItem(PHOTO_KEY);if(s)document.getElementById('aboutPhoto').src=s;}
+function previewProfileImg(url){const p=document.getElementById('profilePreview'),ph=document.getElementById('profilePreviewPlaceholder');if(url){p.src=url;p.style.display='block';ph.style.display='none';}else{p.style.display='none';ph.style.display='block';}}
+function saveProfileUrl(){const url=document.getElementById('photoUrl').value.trim();if(!url){alert('Please enter a photo URL.');return;}localStorage.setItem(PHOTO_KEY,url);document.getElementById('aboutPhoto').src=url;const m=document.getElementById('photoSavedMsg');m.style.display='block';setTimeout(()=>m.style.display='none',3000);}
+function handlePhotoUpload(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){const d=e.target.result;previewProfileImg(d);localStorage.setItem(PHOTO_KEY,d);document.getElementById('aboutPhoto').src=d;const m=document.getElementById('photoSavedMsg');m.style.display='block';setTimeout(()=>m.style.display='none',3000);};reader.readAsDataURL(file);}
+
+// Init
+renderListings(getListings());
+loadProfilePhoto();
+</script>
+</body>
+</html>
